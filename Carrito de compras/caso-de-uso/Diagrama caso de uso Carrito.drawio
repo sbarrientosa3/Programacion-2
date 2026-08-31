@@ -1,0 +1,66 @@
+<mxfile host="Electron">
+  <diagram name="Página-1" id="Qtk_cciYw76halsbmwLu">
+    <mxGraphModel dx="1843" dy="612" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-12" edge="1" parent="1" source="rPXHbDqtXNabqhAzzHcf-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="rPXHbDqtXNabqhAzzHcf-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-13" edge="1" parent="1" source="rPXHbDqtXNabqhAzzHcf-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="rPXHbDqtXNabqhAzzHcf-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-14" edge="1" parent="1" source="rPXHbDqtXNabqhAzzHcf-2" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="rPXHbDqtXNabqhAzzHcf-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-2" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" value="&#xa;Usuario No Registrado&#xa;&#xa;" vertex="1">
+          <mxGeometry height="60" width="30" x="-20" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-8" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Consultar Catálogo de Productos&amp;nbsp;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px;&quot;&gt;(Precios y Stock)&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="140" x="225" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-17" edge="1" parent="1" source="rPXHbDqtXNabqhAzzHcf-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=1 1;" target="rPXHbDqtXNabqhAzzHcf-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-18" connectable="0" parent="rPXHbDqtXNabqhAzzHcf-17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;" vertex="1">
+          <mxGeometry relative="1" x="0.0333" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-9" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Cotizar Productos&lt;div&gt;&amp;nbsp;(Calcular Subtotal e IVA sin comprar)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="140" x="225" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-10" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Registrar Usuario&lt;br&gt;(Crear Cuenta de Cliente)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="70" width="140" x="225" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-15" parent="1" style="ellipse;whiteSpace=wrap;html=1;" value="Validar Inventario&lt;div&gt;&amp;nbsp;(Stock &amp;gt;= Cantidad)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="140" x="225" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-19" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;autosizeText=1;fontSize=18;align=left;" value="&lt;div&gt;1. Solo clientes registrados pueden comprar.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;2. No se puede comprar si stock &amp;lt; cantidad solicitada.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;3. Pago exclusivo con Tarjeta de Crédito.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;4. Cotización pública que no reserva inventario.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="160" width="440" x="390" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-23" parent="1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="30" width="710" x="160" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-24" parent="1" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="710" x="160" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-26" edge="1" parent="1" source="rPXHbDqtXNabqhAzzHcf-23" style="endArrow=none;html=1;rounded=0;entryX=0.001;entryY=0.54;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.502;exitDx=0;exitDy=0;exitPerimeter=0;" target="rPXHbDqtXNabqhAzzHcf-24" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="160" y="605.18" as="sourcePoint" />
+            <mxPoint x="150" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-27" edge="1" parent="1" source="rPXHbDqtXNabqhAzzHcf-23" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.515;entryDx=0;entryDy=0;entryPerimeter=0;" target="rPXHbDqtXNabqhAzzHcf-24" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <mxPoint x="880" y="590" as="sourcePoint" />
+            <mxPoint x="880" y="-22.72" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rPXHbDqtXNabqhAzzHcf-29" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=21;" value="Diagrama de uso - Carrito de Compras" vertex="1">
+          <mxGeometry height="40" width="430" x="290" y="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
