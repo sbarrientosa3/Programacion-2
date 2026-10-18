@@ -5,14 +5,14 @@ try
 {
     ConexionBaseDatos.Inicializar();
 
-    MenuBiblioteca menu = new();
+    MenuBiblioteca menu = new MenuBiblioteca();
     menu.Ejecutar();
 }
-catch (Exception excepcion)
+catch (Exception error)
 {
-    Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine(
-        "No fue posible iniciar el sistema de biblioteca.");
-    Console.WriteLine($"Detalle: {excepcion.Message}");
-    Console.ResetColor();
+        "No fue posible iniciar el sistema.");
+
+    Console.WriteLine(
+        "Detalle: " + error.Message);
 }

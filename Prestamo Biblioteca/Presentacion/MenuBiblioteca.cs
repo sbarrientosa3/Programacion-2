@@ -5,70 +5,70 @@ namespace PrestamosBiblioteca.Presentacion;
 
 public class MenuBiblioteca
 {
-    private readonly RepositorioBiblioteca _repositorio = new();
+    private readonly RepositorioLectores lectores;
+    private readonly RepositorioLibros libros;
+    private readonly RepositorioPrestamos prestamos;
+
+    public MenuBiblioteca()
+    {
+        lectores = new RepositorioLectores();
+        libros = new RepositorioLibros();
+        prestamos = new RepositorioPrestamos();
+    }
 
     public void Ejecutar()
     {
-        string opcion;
+        string opcion = "";
 
-        do
+        while (opcion != "0")
         {
             Console.Clear();
-            MostrarEncabezado();
-
+            Console.WriteLine("========================================");
+            Console.WriteLine(" SISTEMA DE PRÉSTAMOS DE BIBLIOTECA");
+            Console.WriteLine("========================================");
+            Console.WriteLine();
             Console.WriteLine("1. Gestión de lectores");
             Console.WriteLine("2. Gestión de libros");
             Console.WriteLine("3. Gestión de préstamos");
             Console.WriteLine("0. Salir");
             Console.WriteLine();
 
-            opcion = LeerTexto("Seleccione una opción: ");
+            Console.Write("Seleccione una opción: ");
+            opcion = Console.ReadLine() ?? "";
 
-            try
+            switch (opcion)
             {
-                switch (opcion)
-                {
-                    case "1":
-                        MenuLectores();
-                        break;
+                case "1":
+                    MenuLectores();
+                    break;
 
-                    case "2":
-                        MenuLibros();
-                        break;
+                case "2":
+                    MenuLibros();
+                    break;
 
-                    case "3":
-                        MenuPrestamos();
-                        break;
+                case "3":
+                    MenuPrestamos();
+                    break;
 
-                    case "0":
-                        Console.WriteLine();
-                        Console.WriteLine("Aplicación finalizada.");
-                        break;
+                case "0":
+                    Console.WriteLine("Programa finalizado.");
+                    break;
 
-                    default:
-                        MostrarError("La opción seleccionada no es válida.");
-                        Pausar();
-                        break;
-                }
-            }
-            catch (Exception excepcion)
-            {
-                MostrarError(excepcion.Message);
-                Pausar();
+                default:
+                    MostrarMensaje("Opción no válida.");
+                    break;
             }
         }
-        while (opcion != "0");
     }
 
     private void MenuLectores()
     {
-        string opcion;
+        string opcion = "";
 
-        do
+        while (opcion != "0")
         {
             Console.Clear();
             Console.WriteLine("=== GESTIÓN DE LECTORES ===");
-            Console.WriteLine();
             Console.WriteLine("1. Registrar lector");
             Console.WriteLine("2. Listar lectores");
             Console.WriteLine("3. Actualizar lector");
@@ -76,7 +76,8 @@ public class MenuBiblioteca
             Console.WriteLine("0. Volver");
             Console.WriteLine();
 
-            opcion = LeerTexto("Seleccione una opción: ");
+            Console.Write("Seleccione una opción: ");
+            opcion = Console.ReadLine() ?? "";
 
             try
             {
@@ -102,61 +103,62 @@ public class MenuBiblioteca
                         break;
 
                     default:
-                        MostrarError("La opción seleccionada no es válida.");
-                        Pausar();
+                        MostrarMensaje("Opción no válida.");
                         break;
                 }
             }
-            catch (Exception excepcion)
+            catch (Exception error)
             {
-                MostrarError(excepcion.Message);
-                Pausar();
+                MostrarMensaje("Error: " + error.Message);
             }
         }
-        while (opcion != "0");
     }
 
     private void RegistrarLector()
     {
         Console.Clear();
         Console.WriteLine("=== REGISTRAR LECTOR ===");
-        Console.WriteLine();
 
-        Lector lector = new()
-        {
-            Codigo = LeerTextoObligatorio("Código: "),
-            Nombre = LeerTextoObligatorio("Nombre: "),
-            Correo = LeerTextoObligatorio("Correo: "),
-            Telefono = LeerTextoObligatorio("Teléfono: ")
-        };
+        Lector lector = new Lector();
 
-        _repositorio.RegistrarLector(lector);
+        Console.Write("Código: ");
+        lector.Codigo = Console.ReadLine() ?? "";
 
-        MostrarExito("Lector registrado correctamente.");
-        Pausar();
+        Console.Write("Nombre: ");
+        lector.Nombre = Console.ReadLine() ?? "";
+
+        Console.Write("Correo: ");
+        lector.Correo = Console.ReadLine() ?? "";
+
+        Console.Write("Teléfono: ");
+        lector.Telefono = Console.ReadLine() ?? "";
+
+        ValidarLector(lector);
+        lectores.Agregar(lector);
+
+        MostrarMensaje("Lector registrado correctamente.");
     }
 
     private void ListarLectores(bool pausar = true)
     {
-        List<Lector> lectores = _repositorio.ObtenerLectores();
+        List<Lector> lista = lectores.Listar();
 
         Console.WriteLine();
         Console.WriteLine("=== LECTORES REGISTRADOS ===");
-        Console.WriteLine();
 
-        if (lectores.Count == 0)
+        if (lista.Count == 0)
         {
             Console.WriteLine("No hay lectores registrados.");
         }
-        else
+
+        foreach (Lector lector in lista)
         {
-            foreach (Lector lector in lectores)
-            {
-                Console.WriteLine(
-                    $"ID: {lector.Id} | Código: {lector.Codigo} | " +
-                    $"Nombre: {lector.Nombre} | Correo: {lector.Correo} | " +
-                    $"Teléfono: {lector.Telefono}");
-            }
+            Console.WriteLine(
+                $"ID: {lector.Id} | " +
+                $"Código: {lector.Codigo} | " +
+                $"Nombre: {lector.Nombre} | " +
+                $"Correo: {lector.Correo} | " +
+                $"Teléfono: {lector.Telefono}");
         }
 
         if (pausar)
@@ -168,79 +170,55 @@ public class MenuBiblioteca
     private void ActualizarLector()
     {
         Console.Clear();
-        Console.WriteLine("=== ACTUALIZAR LECTOR ===");
-
         ListarLectores(false);
 
-        int id = LeerEnteroPositivo("\nID del lector: ");
+        int id = LeerNumero("\nID del lector: ");
 
-        Lector lector =
-            _repositorio.ObtenerLectorPorId(id)
-            ?? throw new InvalidOperationException(
-                "El lector seleccionado no existe.");
+        Lector? lector = lectores.BuscarPorId(id);
 
-        Console.WriteLine();
-        Console.WriteLine(
-            "Presione Enter para conservar el valor actual.");
+        if (lector == null)
+        {
+            throw new Exception("El lector no existe.");
+        }
 
-        lector.Codigo = LeerValorOpcional(
-            $"Código [{lector.Codigo}]: ",
-            lector.Codigo);
+        Console.Write("Nuevo código: ");
+        lector.Codigo = Console.ReadLine() ?? "";
 
-        lector.Nombre = LeerValorOpcional(
-            $"Nombre [{lector.Nombre}]: ",
-            lector.Nombre);
+        Console.Write("Nuevo nombre: ");
+        lector.Nombre = Console.ReadLine() ?? "";
 
-        lector.Correo = LeerValorOpcional(
-            $"Correo [{lector.Correo}]: ",
-            lector.Correo);
+        Console.Write("Nuevo correo: ");
+        lector.Correo = Console.ReadLine() ?? "";
 
-        lector.Telefono = LeerValorOpcional(
-            $"Teléfono [{lector.Telefono}]: ",
-            lector.Telefono);
+        Console.Write("Nuevo teléfono: ");
+        lector.Telefono = Console.ReadLine() ?? "";
 
-        _repositorio.ActualizarLector(lector);
+        ValidarLector(lector);
+        lectores.Actualizar(lector);
 
-        MostrarExito("Lector actualizado correctamente.");
-        Pausar();
+        MostrarMensaje("Lector actualizado correctamente.");
     }
 
     private void EliminarLector()
     {
         Console.Clear();
-        Console.WriteLine("=== ELIMINAR LECTOR ===");
-
         ListarLectores(false);
 
-        int id = LeerEnteroPositivo("\nID del lector: ");
+        int id = LeerNumero("\nID del lector: ");
 
-        string confirmacion = LeerTexto(
-            "Escriba S para confirmar la eliminación: ");
+        lectores.Eliminar(id);
 
-        if (!confirmacion.Equals(
-                "S",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            Console.WriteLine("Operación cancelada.");
-            Pausar();
-            return;
-        }
-
-        _repositorio.EliminarLector(id);
-
-        MostrarExito("Lector eliminado correctamente.");
-        Pausar();
+        MostrarMensaje("Lector eliminado correctamente.");
     }
 
     private void MenuLibros()
     {
-        string opcion;
+        string opcion = "";
 
-        do
+        while (opcion != "0")
         {
             Console.Clear();
             Console.WriteLine("=== GESTIÓN DE LIBROS ===");
-            Console.WriteLine();
             Console.WriteLine("1. Registrar libro");
             Console.WriteLine("2. Listar libros");
             Console.WriteLine("3. Actualizar libro");
@@ -248,7 +226,8 @@ public class MenuBiblioteca
             Console.WriteLine("0. Volver");
             Console.WriteLine();
 
-            opcion = LeerTexto("Seleccione una opción: ");
+            Console.Write("Seleccione una opción: ");
+            opcion = Console.ReadLine() ?? "";
 
             try
             {
@@ -274,68 +253,69 @@ public class MenuBiblioteca
                         break;
 
                     default:
-                        MostrarError("La opción seleccionada no es válida.");
-                        Pausar();
+                        MostrarMensaje("Opción no válida.");
                         break;
                 }
             }
-            catch (Exception excepcion)
+            catch (Exception error)
             {
-                MostrarError(excepcion.Message);
-                Pausar();
+                MostrarMensaje("Error: " + error.Message);
             }
         }
-        while (opcion != "0");
     }
 
     private void RegistrarLibro()
     {
         Console.Clear();
         Console.WriteLine("=== REGISTRAR LIBRO ===");
-        Console.WriteLine();
 
-        Libro libro = new()
-        {
-            Codigo = LeerTextoObligatorio("Código: "),
-            Titulo = LeerTextoObligatorio("Título: "),
-            Autor = LeerTextoObligatorio("Autor: "),
-            Isbn = LeerTextoObligatorio("ISBN: "),
-            CantidadEjemplares =
-                LeerEnteroNoNegativo("Cantidad de ejemplares: ")
-        };
+        Libro libro = new Libro();
 
-        _repositorio.RegistrarLibro(libro);
+        Console.Write("Código: ");
+        libro.Codigo = Console.ReadLine() ?? "";
 
-        MostrarExito("Libro registrado correctamente.");
-        Pausar();
+        Console.Write("Título: ");
+        libro.Titulo = Console.ReadLine() ?? "";
+
+        Console.Write("Autor: ");
+        libro.Autor = Console.ReadLine() ?? "";
+
+        Console.Write("ISBN: ");
+        libro.Isbn = Console.ReadLine() ?? "";
+
+        libro.CantidadEjemplares =
+            LeerNumero("Cantidad de ejemplares: ");
+
+        ValidarLibro(libro);
+        libros.Agregar(libro);
+
+        MostrarMensaje("Libro registrado correctamente.");
     }
 
     private void ListarLibros(bool pausar = true)
     {
-        List<Libro> libros = _repositorio.ObtenerLibros();
+        List<Libro> lista = libros.Listar();
 
         Console.WriteLine();
         Console.WriteLine("=== LIBROS REGISTRADOS ===");
-        Console.WriteLine();
 
-        if (libros.Count == 0)
+        if (lista.Count == 0)
         {
             Console.WriteLine("No hay libros registrados.");
         }
-        else
-        {
-            foreach (Libro libro in libros)
-            {
-                int disponibles =
-                    _repositorio.ObtenerEjemplaresDisponibles(libro.Id);
 
-                Console.WriteLine(
-                    $"ID: {libro.Id} | Código: {libro.Codigo} | " +
-                    $"Título: {libro.Titulo} | Autor: {libro.Autor} | " +
-                    $"ISBN: {libro.Isbn} | Total: " +
-                    $"{libro.CantidadEjemplares} | " +
-                    $"Disponibles: {disponibles}");
-            }
+        foreach (Libro libro in lista)
+        {
+            int disponibles =
+                libros.ObtenerDisponibles(libro.Id);
+
+            Console.WriteLine(
+                $"ID: {libro.Id} | " +
+                $"Código: {libro.Codigo} | " +
+                $"Título: {libro.Titulo} | " +
+                $"Autor: {libro.Autor} | " +
+                $"Total: {libro.CantidadEjemplares} | " +
+                $"Disponibles: {disponibles}");
         }
 
         if (pausar)
@@ -347,90 +327,66 @@ public class MenuBiblioteca
     private void ActualizarLibro()
     {
         Console.Clear();
-        Console.WriteLine("=== ACTUALIZAR LIBRO ===");
-
         ListarLibros(false);
 
-        int id = LeerEnteroPositivo("\nID del libro: ");
+        int id = LeerNumero("\nID del libro: ");
 
-        Libro libro =
-            _repositorio.ObtenerLibroPorId(id)
-            ?? throw new InvalidOperationException(
-                "El libro seleccionado no existe.");
+        Libro? libro = libros.BuscarPorId(id);
 
-        Console.WriteLine();
-        Console.WriteLine(
-            "Presione Enter para conservar el valor actual.");
+        if (libro == null)
+        {
+            throw new Exception("El libro no existe.");
+        }
 
-        libro.Codigo = LeerValorOpcional(
-            $"Código [{libro.Codigo}]: ",
-            libro.Codigo);
+        Console.Write("Nuevo código: ");
+        libro.Codigo = Console.ReadLine() ?? "";
 
-        libro.Titulo = LeerValorOpcional(
-            $"Título [{libro.Titulo}]: ",
-            libro.Titulo);
+        Console.Write("Nuevo título: ");
+        libro.Titulo = Console.ReadLine() ?? "";
 
-        libro.Autor = LeerValorOpcional(
-            $"Autor [{libro.Autor}]: ",
-            libro.Autor);
+        Console.Write("Nuevo autor: ");
+        libro.Autor = Console.ReadLine() ?? "";
 
-        libro.Isbn = LeerValorOpcional(
-            $"ISBN [{libro.Isbn}]: ",
-            libro.Isbn);
+        Console.Write("Nuevo ISBN: ");
+        libro.Isbn = Console.ReadLine() ?? "";
 
-        libro.CantidadEjemplares = LeerEnteroOpcionalNoNegativo(
-            $"Cantidad [{libro.CantidadEjemplares}]: ",
-            libro.CantidadEjemplares);
+        libro.CantidadEjemplares =
+            LeerNumero("Nueva cantidad: ");
 
-        _repositorio.ActualizarLibro(libro);
+        ValidarLibro(libro);
+        libros.Actualizar(libro);
 
-        MostrarExito("Libro actualizado correctamente.");
-        Pausar();
+        MostrarMensaje("Libro actualizado correctamente.");
     }
 
     private void EliminarLibro()
     {
         Console.Clear();
-        Console.WriteLine("=== ELIMINAR LIBRO ===");
-
         ListarLibros(false);
 
-        int id = LeerEnteroPositivo("\nID del libro: ");
+        int id = LeerNumero("\nID del libro: ");
 
-        string confirmacion = LeerTexto(
-            "Escriba S para confirmar la eliminación: ");
+        libros.Eliminar(id);
 
-        if (!confirmacion.Equals(
-                "S",
-                StringComparison.OrdinalIgnoreCase))
-        {
-            Console.WriteLine("Operación cancelada.");
-            Pausar();
-            return;
-        }
-
-        _repositorio.EliminarLibro(id);
-
-        MostrarExito("Libro eliminado correctamente.");
-        Pausar();
+        MostrarMensaje("Libro eliminado correctamente.");
     }
 
     private void MenuPrestamos()
     {
-        string opcion;
+        string opcion = "";
 
-        do
+        while (opcion != "0")
         {
             Console.Clear();
             Console.WriteLine("=== GESTIÓN DE PRÉSTAMOS ===");
-            Console.WriteLine();
             Console.WriteLine("1. Registrar préstamo");
             Console.WriteLine("2. Listar préstamos");
             Console.WriteLine("3. Registrar devolución");
             Console.WriteLine("0. Volver");
             Console.WriteLine();
 
-            opcion = LeerTexto("Seleccione una opción: ");
+            Console.Write("Seleccione una opción: ");
+            opcion = Console.ReadLine() ?? "";
 
             try
             {
@@ -452,18 +408,15 @@ public class MenuBiblioteca
                         break;
 
                     default:
-                        MostrarError("La opción seleccionada no es válida.");
-                        Pausar();
+                        MostrarMensaje("Opción no válida.");
                         break;
                 }
             }
-            catch (Exception excepcion)
+            catch (Exception error)
             {
-                MostrarError(excepcion.Message);
-                Pausar();
+                MostrarMensaje("Error: " + error.Message);
             }
         }
-        while (opcion != "0");
     }
 
     private void RegistrarPrestamo()
@@ -471,66 +424,33 @@ public class MenuBiblioteca
         Console.Clear();
         Console.WriteLine("=== REGISTRAR PRÉSTAMO ===");
 
-        List<Lector> lectores = _repositorio.ObtenerLectores();
-        List<Libro> libros = _repositorio.ObtenerLibros();
-
-        if (lectores.Count == 0)
-        {
-            throw new InvalidOperationException(
-                "Debe registrar al menos un lector antes de crear un préstamo.");
-        }
-
-        if (libros.Count == 0)
-        {
-            throw new InvalidOperationException(
-                "Debe registrar al menos un libro antes de crear un préstamo.");
-        }
-
         ListarLectores(false);
+        int lectorId = LeerNumero("\nID del lector: ");
 
-        int lectorId = LeerEnteroPositivo(
-            "\nID del lector: ");
-
-        Console.WriteLine();
         ListarLibros(false);
+        int libroId = LeerNumero("\nID del libro: ");
 
-        int libroId = LeerEnteroPositivo(
-            "\nID del libro: ");
+        prestamos.Agregar(lectorId, libroId);
 
-        int dias = LeerEnteroOpcionalPositivo(
-            "Días del préstamo [14]: ",
-            14);
-
-        _repositorio.RegistrarPrestamo(
-            lectorId,
-            libroId,
-            dias);
-
-        MostrarExito(
-            $"Préstamo registrado correctamente por {dias} días.");
-
-        Pausar();
+        MostrarMensaje(
+            "Préstamo registrado por 14 días.");
     }
 
     private void ListarPrestamos(bool pausar = true)
     {
-        List<Prestamo> prestamos =
-            _repositorio.ObtenerPrestamos();
+        List<Prestamo> lista = prestamos.Listar();
 
         Console.WriteLine();
         Console.WriteLine("=== PRÉSTAMOS REGISTRADOS ===");
-        Console.WriteLine();
 
-        if (prestamos.Count == 0)
+        if (lista.Count == 0)
         {
             Console.WriteLine("No hay préstamos registrados.");
         }
-        else
+
+        foreach (Prestamo prestamo in lista)
         {
-            foreach (Prestamo prestamo in prestamos)
-            {
-                Console.WriteLine(prestamo);
-            }
+            Console.WriteLine(prestamo);
         }
 
         if (pausar)
@@ -542,154 +462,68 @@ public class MenuBiblioteca
     private void RegistrarDevolucion()
     {
         Console.Clear();
-        Console.WriteLine("=== REGISTRAR DEVOLUCIÓN ===");
-
         ListarPrestamos(false);
 
-        int id = LeerEnteroPositivo(
-            "\nID del préstamo: ");
+        int id = LeerNumero("\nID del préstamo: ");
 
-        _repositorio.RegistrarDevolucion(id);
+        prestamos.RegistrarDevolucion(id);
 
-        MostrarExito("Devolución registrada correctamente.");
-        Pausar();
+        MostrarMensaje(
+            "Devolución registrada correctamente.");
     }
 
-    private static void MostrarEncabezado()
-    {
-        Console.WriteLine(
-            "========================================");
-        Console.WriteLine(
-            " SISTEMA DE PRÉSTAMOS DE BIBLIOTECA");
-        Console.WriteLine(
-            "========================================");
-        Console.WriteLine();
-    }
-
-    private static string LeerTexto(string mensaje)
+    private static int LeerNumero(string mensaje)
     {
         Console.Write(mensaje);
-        return Console.ReadLine()?.Trim() ?? string.Empty;
+
+        string texto = Console.ReadLine() ?? "";
+
+        int numero;
+
+        if (!int.TryParse(texto, out numero) || numero < 0)
+        {
+            throw new Exception(
+                "Debe ingresar un número válido.");
+        }
+
+        return numero;
     }
 
-    private static string LeerTextoObligatorio(string mensaje)
+    private static void ValidarLector(Lector lector)
     {
-        while (true)
+        if (string.IsNullOrWhiteSpace(lector.Codigo) ||
+            string.IsNullOrWhiteSpace(lector.Nombre) ||
+            string.IsNullOrWhiteSpace(lector.Correo) ||
+            string.IsNullOrWhiteSpace(lector.Telefono))
         {
-            string valor = LeerTexto(mensaje);
-
-            if (!string.IsNullOrWhiteSpace(valor))
-            {
-                return valor;
-            }
-
-            MostrarError("Este campo es obligatorio.");
+            throw new Exception(
+                "Todos los datos del lector son obligatorios.");
         }
     }
 
-    private static int LeerEnteroPositivo(string mensaje)
+    private static void ValidarLibro(Libro libro)
     {
-        while (true)
+        if (string.IsNullOrWhiteSpace(libro.Codigo) ||
+            string.IsNullOrWhiteSpace(libro.Titulo) ||
+            string.IsNullOrWhiteSpace(libro.Autor) ||
+            string.IsNullOrWhiteSpace(libro.Isbn))
         {
-            string texto = LeerTexto(mensaje);
+            throw new Exception(
+                "Todos los datos del libro son obligatorios.");
+        }
 
-            if (int.TryParse(texto, out int numero) && numero > 0)
-            {
-                return numero;
-            }
-
-            MostrarError(
-                "Ingrese un número entero mayor que cero.");
+        if (libro.CantidadEjemplares < 0)
+        {
+            throw new Exception(
+                "La cantidad no puede ser negativa.");
         }
     }
 
-    private static int LeerEnteroNoNegativo(string mensaje)
+    private static void MostrarMensaje(string mensaje)
     {
-        while (true)
-        {
-            string texto = LeerTexto(mensaje);
-
-            if (int.TryParse(texto, out int numero) && numero >= 0)
-            {
-                return numero;
-            }
-
-            MostrarError(
-                "Ingrese un número entero igual o mayor que cero.");
-        }
-    }
-
-    private static int LeerEnteroOpcionalPositivo(
-        string mensaje,
-        int valorActual)
-    {
-        while (true)
-        {
-            string texto = LeerTexto(mensaje);
-
-            if (string.IsNullOrWhiteSpace(texto))
-            {
-                return valorActual;
-            }
-
-            if (int.TryParse(texto, out int numero) && numero > 0)
-            {
-                return numero;
-            }
-
-            MostrarError(
-                "Ingrese un número entero mayor que cero.");
-        }
-    }
-
-    private static int LeerEnteroOpcionalNoNegativo(
-        string mensaje,
-        int valorActual)
-    {
-        while (true)
-        {
-            string texto = LeerTexto(mensaje);
-
-            if (string.IsNullOrWhiteSpace(texto))
-            {
-                return valorActual;
-            }
-
-            if (int.TryParse(texto, out int numero) && numero >= 0)
-            {
-                return numero;
-            }
-
-            MostrarError(
-                "Ingrese un número entero igual o mayor que cero.");
-        }
-    }
-
-    private static string LeerValorOpcional(
-        string mensaje,
-        string valorActual)
-    {
-        string valor = LeerTexto(mensaje);
-
-        return string.IsNullOrWhiteSpace(valor)
-            ? valorActual
-            : valor;
-    }
-
-    private static void MostrarExito(string mensaje)
-    {
-        Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine();
         Console.WriteLine(mensaje);
-        Console.ResetColor();
-    }
-
-    private static void MostrarError(string mensaje)
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine();
-        Console.WriteLine($"Error: {mensaje}");
-        Console.ResetColor();
+        Pausar();
     }
 
     private static void Pausar()
